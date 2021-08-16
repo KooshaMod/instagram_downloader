@@ -4,6 +4,15 @@ from bs4 import BeautifulSoup
 from selenium.common.exceptions import NoSuchElementException
 
 CONFIG = {'username': "tarikhsazan", "password": "koosha123", "instagram_profile": "kingbash"}
+
+
+def replacement(s):
+    s = s.replace('null', 'None')
+    s = s.replace('false', 'False')
+    s = s.replace('true', 'True')
+    return s
+
+
 if __name__ == "__main__":
 
     url = "https://www.instagram.com/accounts/login/"
@@ -50,3 +59,10 @@ if __name__ == "__main__":
             posts.append(post)
 
     posts = [p + '?__a=1' for p in posts]
+
+    for p in posts:
+        driver.get(p)
+        soup = BeautifulSoup(driver.page_source)
+        dic = eval(replacement(soup.select('pre')[0].get_text()))
+        post_type = dic['graphql']['shortcode_media']['__typename']
+        print(post_type)
