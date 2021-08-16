@@ -26,6 +26,7 @@ if __name__ == "__main__":
     driver.get(url)
     time.sleep(3)
     # TODO: start new tread for scrolling and another tread for downloading the content
+
     # scroll to the bottom of page
     lenOfPage = driver.execute_script(
         "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
@@ -37,3 +38,15 @@ if __name__ == "__main__":
             "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
         if lastCount == lenOfPage:
             match = True
+
+    # find all links on the page and if they match '/p' append to list named posts
+    posts = []
+    links = driver.find_elements_by_tag_name('a')
+    print(links)
+    print(len(links))
+    for link in links:
+        post = link.get_attribute('href')
+        if '/p/' in post:
+            posts.append(post)
+
+    posts = [p + '?__a=1' for p in posts]
