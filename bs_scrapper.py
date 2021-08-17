@@ -1,9 +1,22 @@
 from selenium import webdriver
 import time
 from bs4 import BeautifulSoup
+import os
+import json
+import urllib.request
 from selenium.common.exceptions import NoSuchElementException
 
-CONFIG = {'username': "tarikhsazan", "password": "koosha123", "instagram_profile": "kingbash"}
+CONFIG = {'username': "tarikhsazan", "password": "koosha123", "instagram_profile": "tah"}
+
+
+def write_file(dic, CONFIG):
+    """accept dictionary serialize and save it to json file in its folder"""
+    dic = json.dumps(dic, indent=4)
+    os.mkdir(os.path.join('bs_data', CONFIG['instagram_profile']))
+    file_name = CONFIG['instagram_profile'] + '.json'
+    complete_name = os.path.join(os.path.join('bs_data', CONFIG['instagram_profile']), file_name)
+    with open(complete_name, 'w') as f:
+        f.write(dic)
 
 
 def replacement(s):
@@ -14,7 +27,12 @@ def replacement(s):
 
 
 if __name__ == "__main__":
-
+    d = {
+        "name": "koosha",
+        "age": 32,
+        "occupation": "programmer"
+    }
+    write_file(d, CONFIG)
     url = "https://www.instagram.com/accounts/login/"
     driver = webdriver.Chrome()
     driver.get(url)
@@ -34,7 +52,7 @@ if __name__ == "__main__":
     url = "https://www.instagram.com/" + CONFIG['instagram_profile']
     driver.get(url)
     time.sleep(3)
-    # TODO: start new tread for scrolling and another tread for downloading the content
+    # TODO: start new thread for scrolling and another tread for downloading the content
 
     # scroll to the bottom of page
     lenOfPage = driver.execute_script(
@@ -65,4 +83,5 @@ if __name__ == "__main__":
         soup = BeautifulSoup(driver.page_source)
         dic = eval(replacement(soup.select('pre')[0].get_text()))
         post_type = dic['graphql']['shortcode_media']['__typename']
-        print(post_type)
+        if post_type == 'GraphImage':
+            pass
