@@ -78,6 +78,8 @@ def find_posts(driver):
 
 def click_not_now(driver):
     """close save password and notification dialog by clicking not now"""
+    print('trying to click on not now if save credential or notification dialog appear')
+    print('Please wait it may takes some time')
     # save login info dialog
     try:
         driver.find_element_by_class_name('ABCxa')
